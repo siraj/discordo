@@ -3,7 +3,7 @@
 auto_focus = true
 
 # Whether to enable mouse or not.
-mouse = true
+mouse = false
 # The program to open when the `message_input.editor` keybind is pressed. Set the value to `"default"` to use `$EDITOR`.
 editor = "default"
 

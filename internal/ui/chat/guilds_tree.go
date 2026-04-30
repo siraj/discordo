@@ -115,7 +115,7 @@ func (gt *guildsTree) FullHelp() [][]keybind.Keybind {
 	collapseHelp := collapseParent.Help()
 	collapseParent.SetHelp(collapseHelp.Key, "collapse parent")
 
-	actions := []keybind.Keybind{selectCurrent, cfg.MoveToParentNode.Keybind}
+	actions := []keybind.Keybind{cfg.ExpandNode.Keybind, cfg.CollapseNode.Keybind, cfg.MoveToParentNode.Keybind}
 	if gt.canCollapseParent(gt.GetCurrentNode()) {
 		actions = append(actions, collapseParent)
 	}
@@ -411,6 +411,18 @@ func (gt *guildsTree) Update(msg tview.Msg) tview.Cmd {
 	case tview.KeyMsg:
 		handler := gt.TreeView.Update
 		switch {
+		case keybind.Matches(msg, gt.cfg.Keybinds.GuildsTree.ExpandNode.Keybind):
+			node := gt.GetCurrentNode()
+			if node != nil && !node.IsExpanded() {
+				node.SetExpanded(true)
+			}
+			return nil
+		case keybind.Matches(msg, gt.cfg.Keybinds.GuildsTree.CollapseNode.Keybind):
+			node := gt.GetCurrentNode()
+			if node != nil && node.IsExpanded() {
+				node.SetExpanded(false)
+			}
+			return nil
 		case keybind.Matches(msg, gt.cfg.Keybinds.GuildsTree.CollapseParentNode.Keybind):
 			gt.collapseParentNode(gt.GetCurrentNode())
 			return nil
