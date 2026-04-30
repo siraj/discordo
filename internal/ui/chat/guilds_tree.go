@@ -411,13 +411,13 @@ func (gt *guildsTree) Update(msg tview.Msg) tview.Cmd {
 	case tview.KeyMsg:
 		handler := gt.TreeView.Update
 		switch {
-		case keybind.Matches(msg, gt.cfg.Keybinds.GuildsTree.ExpandNode.Keybind):
+		case len(gt.cfg.Keybinds.GuildsTree.ExpandNode.Keys()) > 0 && keybind.Matches(msg, gt.cfg.Keybinds.GuildsTree.ExpandNode.Keybind):
 			node := gt.GetCurrentNode()
 			if node != nil && !node.IsExpanded() {
 				node.SetExpanded(true)
 			}
 			return nil
-		case keybind.Matches(msg, gt.cfg.Keybinds.GuildsTree.CollapseNode.Keybind):
+		case len(gt.cfg.Keybinds.GuildsTree.CollapseNode.Keys()) > 0 && keybind.Matches(msg, gt.cfg.Keybinds.GuildsTree.CollapseNode.Keybind):
 			node := gt.GetCurrentNode()
 			if node != nil && node.IsExpanded() {
 				node.SetExpanded(false)
