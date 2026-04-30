@@ -3,6 +3,7 @@ package login
 import (
 	"log/slog"
 
+	"github.com/ayn2op/tview/keybind"
 	"github.com/ayn2op/tview/layers"
 	"github.com/ayn2op/tview/tabs"
 	"github.com/gdamore/tcell/v3"
@@ -28,15 +29,21 @@ type Model struct {
 }
 
 func NewModel(cfg *config.Config) *Model {
-	tabs := tabs.NewModel([]tabs.Tab{token.NewModel(), qr.NewModel()})
+	tabsModel := tabs.NewModel([]tabs.Tab{token.NewModel(), qr.NewModel()})
+	
+	// Configure Tab navigation keybinds
+	tabsModel.SetKeybinds(tabs.Keybinds{
+		Next:     keybind.NewKeybind(keybind.WithKeys("tab"), keybind.WithHelp("tab", "next tab")),
+		Previous: keybind.NewKeybind(keybind.WithKeys("shift+tab"), keybind.WithHelp("shift+tab", "prev tab")),
+	})
 
 	l := layers.New()
 	ui.ConfigureBox(l.Box, &cfg.Theme)
 	l.SetBackgroundLayerStyle(cfg.Theme.Dialog.BackgroundStyle.Style)
-	l.AddLayer(tabs, layers.WithName(tabsLayerName), layers.WithResize(true), layers.WithVisible(true))
+	l.AddLayer(tabsModel, layers.WithName(tabsLayerName), layers.WithResize(true), layers.WithVisible(true))
 	return &Model{
 		Layers: l,
-		tabs:   tabs,
+		tabs:   tabsModel,
 		cfg:    cfg,
 	}
 }
