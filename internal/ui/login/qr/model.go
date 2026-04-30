@@ -103,6 +103,11 @@ func (m *Model) Update(msg tview.Msg) tview.Cmd {
 	case errMsg:
 		m.msg = msg.err.Error()
 		return m.close()
+
+	case TokenMsg:
+		return func() tview.Msg {
+			return msg
+		}
 	}
 
 	return nil
