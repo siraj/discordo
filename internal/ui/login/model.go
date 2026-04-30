@@ -50,6 +50,11 @@ func NewModel(cfg *config.Config) *Model {
 
 func (m *Model) Update(msg tview.Msg) tview.Cmd {
 	switch msg := msg.(type) {
+	case token.TokenMsg, qr.TokenMsg:
+		// Forward token messages to parent (root) model
+		return func() tview.Msg {
+			return msg
+		}
 	case errMsg:
 		if m.HasLayer(errorLayerName) {
 			return nil
